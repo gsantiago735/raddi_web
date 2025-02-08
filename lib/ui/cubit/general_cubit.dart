@@ -1,7 +1,7 @@
-import 'package:raddi_web/models/admin/admin.dart';
-import 'package:raddi_web/models/generic/wrapped.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:raddi_web/models/admin/admin.dart';
+import 'package:raddi_web/models/generic/wrapped.dart';
 import 'package:raddi_web/providers/admin_provider.dart';
 import 'package:raddi_web/models/generic/generic_enums.dart';
 import 'package:raddi_web/models/generic/data_exception_model.dart';
@@ -14,6 +14,38 @@ class GeneralCubit extends Cubit<GeneralState> {
   final _adminProvider = AdminProvider();
 
   void clean() => emit(const GeneralState());
+
+  void setGross(bool value) => emit(state.copyWith(isGross: value));
+
+  void setPeriod(int value) => emit(state.copyWith(period: value));
+
+  String showIncome() {
+    if (state.isGross) {
+      switch (state.period) {
+        case 0:
+          return state.income?.period?.gross?.today?.general.toString() ??
+              "N/A";
+        case 1:
+          return state.income?.period?.gross?.week?.general.toString() ?? "N/A";
+        case 2:
+          return state.income?.period?.gross?.month?.general.toString() ??
+              "N/A";
+        default:
+          return "";
+      }
+    } else {
+      switch (state.period) {
+        case 0:
+          return state.income?.period?.net?.today?.general.toString() ?? "N/A";
+        case 1:
+          return state.income?.period?.net?.week?.general.toString() ?? "N/A";
+        case 2:
+          return state.income?.period?.net?.month?.general.toString() ?? "N/A";
+        default:
+          return "";
+      }
+    }
+  }
 
   // ========================================================================
   // Home

@@ -30,7 +30,7 @@ class _View extends StatefulWidget {
 class __ViewState extends State<_View> {
   late GeneralCubit _cubit;
 
-  final double centerSection = 64.0;
+  final double _headerHeight = 140;
 
   @override
   void initState() {
@@ -45,6 +45,8 @@ class __ViewState extends State<_View> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Row(
       children: [
         Expanded(
@@ -52,8 +54,8 @@ class __ViewState extends State<_View> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
+              SizedBox(
+                height: _headerHeight,
                 child: SvgPicture.asset(ConstantIcons.logo),
               ),
               Expanded(child: _RenderLeftSection()),
@@ -67,15 +69,17 @@ class __ViewState extends State<_View> {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    top: 30, left: centerSection, right: centerSection),
+              Container(
+                height: _headerHeight,
+                width: double.infinity,
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Hola!",
+                      "Hola, Nombre!",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -106,14 +110,55 @@ class __ViewState extends State<_View> {
             flex: 3,
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: SvgPicture.asset(ConstantIcons.logo),
+                SizedBox(
+                  height: _headerHeight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.person_rounded,
+                        size: 50,
+                        color: Color(0xFF11142D),
+                      ),
+                      const SizedBox(width: 16),
+                      Flexible(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Nombre Usuario",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF11142D),
+                              ),
+                            ),
+                            Text(
+                              "Administrador",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF808191),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(
+                        Icons.swap_vert_outlined,
+                        size: 24,
+                        color: Color(0xFF11142D),
+                      ),
+                    ],
+                  ),
                 ),
-                Expanded(
-                    child: _RenderRightSection(
-                  padding: centerSection,
-                )),
+                Expanded(child: _RenderRightSection()),
               ],
             )),
       ],
@@ -131,7 +176,11 @@ class _RenderLeftSection extends StatelessWidget {
         builder: (context, state) {
           switch (state.stadisticsStatus) {
             case WidgetStatus.error:
-              return Text("Error");
+              return Center(
+                  child: Text(
+                "Ha ocurrido un error.",
+                textAlign: TextAlign.center,
+              ));
             case WidgetStatus.loading:
               return Center(child: LoadingIndicator());
             default:
@@ -202,12 +251,18 @@ class _RenderCenterSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return BlocBuilder<GeneralCubit, GeneralState>(
-      buildWhen: (p, c) => (p.stadisticsStatus != c.stadisticsStatus),
+      buildWhen: (p, c) => (p.paymentMethodStatus != c.paymentMethodStatus),
       builder: (context, state) {
-        switch (state.stadisticsStatus) {
+        switch (state.paymentMethodStatus) {
           case WidgetStatus.error:
-            return Text("error");
+            return Center(
+                child: Text(
+              "Ha ocurrido un error.",
+              textAlign: TextAlign.center,
+            ));
           case WidgetStatus.loading:
             return Center(child: LoadingIndicator());
           default:
@@ -215,27 +270,18 @@ class _RenderCenterSection extends StatelessWidget {
               behavior:
                   ScrollConfiguration.of(context).copyWith(scrollbars: false),
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 64),
+                padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
                 children: [
-                  Container(
-                    width: double.infinity,
-                    height: 400,
-                    decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.all(Radius.circular(24))),
+                  CustomLayout(
+                    child: WeeklyStadisticComponent(),
                   ),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Container(
-                          height: 200,
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(24))),
-                        ),
+                        child: CustomLayout(child: PaymentComponent()),
                       ),
                       const SizedBox(width: 10),
                       Expanded(
@@ -259,38 +305,40 @@ class _RenderCenterSection extends StatelessWidget {
 }
 
 class _RenderRightSection extends StatelessWidget {
-  const _RenderRightSection({required this.padding});
-
-  final double padding;
+  const _RenderRightSection();
 
   @override
   Widget build(BuildContext context) {
-    return ScrollConfiguration(
-      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-      child: ListView(
-        padding: EdgeInsets.symmetric(horizontal: padding),
-        children: [
-          Expanded(
-            child: Container(
-              height: 300,
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.all(Radius.circular(24)),
+    final size = MediaQuery.of(context).size;
+    return BlocBuilder<GeneralCubit, GeneralState>(
+      buildWhen: (p, c) => (p.incomeStatus != c.incomeStatus),
+      builder: (context, state) {
+        switch (state.incomeStatus) {
+          case WidgetStatus.error:
+            return Center(
+                child: Text(
+              "Ha ocurrido un error.",
+              textAlign: TextAlign.center,
+            ));
+          case WidgetStatus.loading:
+            return Center(child: LoadingIndicator());
+          default:
+            return ScrollConfiguration(
+              behavior:
+                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
+              child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+                children: [
+                  CustomLayout(child: IncomeCard()),
+                  const SizedBox(height: 40),
+                  CustomLayout(
+                    child: BarChartTripsComponent(),
+                  ),
+                ],
               ),
-            ),
-          ),
-          const SizedBox(height: 40),
-          Expanded(
-            child: Container(
-              height: 300,
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.all(Radius.circular(24)),
-              ),
-            ),
-          ),
-        ],
-      ),
+            );
+        }
+      },
     );
   }
 }

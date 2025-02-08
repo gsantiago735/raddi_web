@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:raddi_web/ui/home/widgets/custom_layout.dart';
 
 class StadisticComponent extends StatelessWidget {
   const StadisticComponent(
@@ -9,21 +10,7 @@ class StadisticComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(16)),
-        border: Border.fromBorderSide(
-            BorderSide(width: 1, color: Color(0xFFE4E4E4))),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF04060F).withValues(alpha: 0.05),
-            offset: const Offset(0.0, 4.0),
-            blurRadius: 60.0,
-          ),
-        ],
-      ),
+    return CustomLayout(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

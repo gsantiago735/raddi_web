@@ -9,6 +9,8 @@ class GeneralState extends Equatable {
     this.income,
     this.stadistics,
     this.payment,
+    this.isGross = true,
+    this.period = 1,
   });
 
   // General
@@ -18,6 +20,9 @@ class GeneralState extends Equatable {
   final WidgetStatus incomeStatus;
   final WidgetStatus paymentMethodStatus;
   final WidgetStatus stadisticsStatus;
+
+  final bool isGross;
+  final int period;
 
   final IncomeResponseModel? income;
   final StadisticsResponseModel? stadistics;
@@ -32,6 +37,8 @@ class GeneralState extends Equatable {
         income,
         stadistics,
         payment,
+        isGross,
+        period,
       ];
 
   GeneralState copyWith({
@@ -42,6 +49,8 @@ class GeneralState extends Equatable {
     Wrapped<IncomeResponseModel?>? income,
     Wrapped<StadisticsResponseModel?>? stadistics,
     Wrapped<List<PaymentStadisticsResponseModel>?>? payment,
+    bool? isGross,
+    int? period,
   }) {
     return GeneralState(
       exception: exception ?? this.exception,
@@ -51,6 +60,8 @@ class GeneralState extends Equatable {
       income: income != null ? income.value : this.income,
       stadistics: stadistics != null ? stadistics.value : this.stadistics,
       payment: payment != null ? payment.value : this.payment,
+      isGross: isGross ?? this.isGross,
+      period: period ?? this.period,
     );
   }
 }
