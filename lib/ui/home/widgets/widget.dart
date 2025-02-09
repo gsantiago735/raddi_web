@@ -1,3 +1,4 @@
+export "bar_chart_stadistics_component.dart";
 export "bar_chart_trips_component.dart";
 export "custom_layout.dart";
 export "income_card.dart";

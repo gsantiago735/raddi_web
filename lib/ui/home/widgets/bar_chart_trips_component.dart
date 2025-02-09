@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+// Grafico de viajes segun el tipo de vehiculo (Carro/Moto)
 class BarChartTripsComponent extends StatefulWidget {
   BarChartTripsComponent({super.key});
 

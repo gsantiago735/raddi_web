@@ -39,6 +39,7 @@ class __ViewState extends State<_View> {
     _cubit.getIncome();
     _cubit.getStadistic();
     _cubit.getPaymentStadistics();
+    _cubit.getWeeklyStadistics();
 
     super.initState();
   }
@@ -283,16 +284,16 @@ class _RenderCenterSection extends StatelessWidget {
                       Expanded(
                         child: CustomLayout(child: PaymentComponent()),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Container(
-                          height: 200,
-                          decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(24))),
-                        ),
-                      ),
+                      //const SizedBox(width: 10),
+                      //Expanded(
+                      //  child: Container(
+                      //    height: 200,
+                      //    decoration: BoxDecoration(
+                      //        color: Colors.red,
+                      //        borderRadius:
+                      //            BorderRadius.all(Radius.circular(24))),
+                      //  ),
+                      //),
                     ],
                   )
                 ],

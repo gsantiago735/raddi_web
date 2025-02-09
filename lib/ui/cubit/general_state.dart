@@ -11,6 +11,8 @@ class GeneralState extends Equatable {
     this.payment,
     this.isGross = true,
     this.period = 1,
+    this.weeklyStadistics,
+    this.weeklyStatus = WidgetStatus.initial,
   });
 
   // General
@@ -20,6 +22,7 @@ class GeneralState extends Equatable {
   final WidgetStatus incomeStatus;
   final WidgetStatus paymentMethodStatus;
   final WidgetStatus stadisticsStatus;
+  final WidgetStatus weeklyStatus;
 
   final bool isGross;
   final int period;
@@ -27,6 +30,7 @@ class GeneralState extends Equatable {
   final IncomeResponseModel? income;
   final StadisticsResponseModel? stadistics;
   final List<PaymentStadisticsResponseModel>? payment;
+  final List<WeeklyResponseModel>? weeklyStadistics;
 
   @override
   List<Object?> get props => [
@@ -39,6 +43,8 @@ class GeneralState extends Equatable {
         payment,
         isGross,
         period,
+        weeklyStadistics,
+        weeklyStatus,
       ];
 
   GeneralState copyWith({
@@ -51,6 +57,8 @@ class GeneralState extends Equatable {
     Wrapped<List<PaymentStadisticsResponseModel>?>? payment,
     bool? isGross,
     int? period,
+    Wrapped<List<WeeklyResponseModel>?>? weeklyStadistics,
+    WidgetStatus? weeklyStatus,
   }) {
     return GeneralState(
       exception: exception ?? this.exception,
@@ -62,6 +70,10 @@ class GeneralState extends Equatable {
       payment: payment != null ? payment.value : this.payment,
       isGross: isGross ?? this.isGross,
       period: period ?? this.period,
+      weeklyStadistics: weeklyStadistics != null
+          ? weeklyStadistics.value
+          : this.weeklyStadistics,
+      weeklyStatus: weeklyStatus ?? this.weeklyStatus,
     );
   }
 }

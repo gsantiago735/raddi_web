@@ -44,4 +44,18 @@ class AdminProvider {
       return Left(DataException(details: e.toString()));
     }
   }
+
+  Future<Either<DataException, List<WeeklyResponseModel>>>
+      getWeeklyStadistics() async {
+    try {
+      final response = await Api().tokenDio.get(EndPointConstant.weekly);
+
+      return Right(List.from(
+          (response.data).map((x) => WeeklyResponseModel.fromJson(x))));
+    } on DioException catch (e) {
+      return Left(DataException(exception: e));
+    } catch (e) {
+      return Left(DataException(details: e.toString()));
+    }
+  }
 }

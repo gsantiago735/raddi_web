@@ -95,4 +95,19 @@ class GeneralCubit extends Cubit<GeneralState> {
           stadistics: Wrapped.value(r)));
     });
   }
+
+  Future<void> getWeeklyStadistics() async {
+    if (state.weeklyStatus == WidgetStatus.loading) return;
+    emit(state.copyWith(weeklyStatus: WidgetStatus.loading));
+
+    final response = await _adminProvider.getWeeklyStadistics();
+
+    return response.fold((l) {
+      emit(state.copyWith(weeklyStatus: WidgetStatus.error, exception: l));
+    }, (r) {
+      emit(state.copyWith(
+          weeklyStatus: WidgetStatus.success,
+          weeklyStadistics: Wrapped.value(r)));
+    });
+  }
 }

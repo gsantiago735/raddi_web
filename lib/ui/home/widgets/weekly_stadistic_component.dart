@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:raddi_web/ui/home/widgets/bar_chart_stadistics_component.dart';
 
 class WeeklyStadisticComponent extends StatelessWidget {
   const WeeklyStadisticComponent({super.key});
@@ -20,14 +21,14 @@ class WeeklyStadisticComponent extends StatelessWidget {
         const SizedBox(height: 30),
         _Component(
           title: "Usuarios registrados",
-          value: "25",
-          percentage: "21.77%",
+          value: "40",
+          percentage: "21.95%",
         ),
         Divider(height: 60),
         _Component(
           title: "Viajes Realizados",
-          value: "25",
-          percentage: "21.77%",
+          value: "246",
+          percentage: "11.45%",
         ),
       ],
     );
@@ -84,11 +85,9 @@ class _Component extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         Expanded(
-            flex: 2,
-            child: Container(
-              height: 100,
-              color: Colors.red,
-            ))
+          flex: 3,
+          child: SizedBox(height: 200, child: BarChartStadisticsComponent()),
+        )
       ],
     );
   }

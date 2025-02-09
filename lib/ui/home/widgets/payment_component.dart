@@ -80,6 +80,8 @@ class _Option extends StatelessWidget {
       ),
       subtitle: Text(
         "$value% de las veces.",
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(
           fontSize: 14,
           color: Color(0xFF808191),
