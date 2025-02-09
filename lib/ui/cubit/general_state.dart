@@ -13,12 +13,14 @@ class GeneralState extends Equatable {
     this.period = 1,
     this.weeklyStadistics,
     this.weeklyStatus = WidgetStatus.initial,
+    this.user,
   });
 
   // General
   final DataException? exception;
 
   // Home
+  final User? user;
   final WidgetStatus incomeStatus;
   final WidgetStatus paymentMethodStatus;
   final WidgetStatus stadisticsStatus;
@@ -45,6 +47,7 @@ class GeneralState extends Equatable {
         period,
         weeklyStadistics,
         weeklyStatus,
+        user,
       ];
 
   GeneralState copyWith({
@@ -59,6 +62,7 @@ class GeneralState extends Equatable {
     int? period,
     Wrapped<List<WeeklyResponseModel>?>? weeklyStadistics,
     WidgetStatus? weeklyStatus,
+    Wrapped<User?>? user,
   }) {
     return GeneralState(
       exception: exception ?? this.exception,
@@ -74,6 +78,7 @@ class GeneralState extends Equatable {
           ? weeklyStadistics.value
           : this.weeklyStadistics,
       weeklyStatus: weeklyStatus ?? this.weeklyStatus,
+      user: user != null ? user.value : this.user,
     );
   }
 }

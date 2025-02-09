@@ -19,7 +19,7 @@ class Validators {
     return null;
   }
 
-  /*static String? fullNameValidation(String? value) {
+  static String? fullNameValidation(String? value) {
     if (value == null || value.isEmpty) {
       return 'Por favor ingrese su nombre completo.';
     }
@@ -38,7 +38,7 @@ class Validators {
     return null;
   }
 
-  static String? phoneValidator(String? value) {
+  /*static String? phoneValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Por favor ingresa un número de teléfono válido.';
     }

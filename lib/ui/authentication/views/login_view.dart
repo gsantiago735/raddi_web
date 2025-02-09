@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:raddi_web/providers/providers.dart';
 import 'package:raddi_web/utils/validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:raddi_web/utils/generic_utils.dart';
@@ -157,7 +158,10 @@ class _FormState extends State<_Form> {
     FocusManager.instance.primaryFocus?.unfocus();
 
     if (_formKey.currentState!.validate()) {
-      _cubit.login();
+      _cubit.login(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
     }
   }
 
@@ -246,6 +250,20 @@ class _FormState extends State<_Form> {
           GenericButton(
             text: "Iniciar Sesión",
             onTap: () => _submit(),
+          ),
+          const SizedBox(height: 24),
+          GenericButton(
+            text: "Iniciar con Google",
+            color: Colors.grey,
+            onTap: () async {
+              await AuthLocalProvider().signInWithGoogle().then((value) {
+                if (value.additionalUserInfo?.profile?["email"] != null) {
+                  if (!context.mounted) return;
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      HomeView.routeName, (Route<dynamic> route) => false);
+                }
+              });
+            },
           ),
           const SizedBox(height: 24),
           const _RegisterText(),

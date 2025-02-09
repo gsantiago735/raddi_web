@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:raddi_web/providers/auth_local_provider.dart';
+import 'package:raddi_web/ui/authentication/views/login_view.dart';
 import 'package:raddi_web/ui/cubit/cubit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,6 +38,7 @@ class __ViewState extends State<_View> {
   void initState() {
     _cubit = context.read<GeneralCubit>();
 
+    _cubit.getUser();
     _cubit.getIncome();
     _cubit.getStadistic();
     _cubit.getPaymentStadistics();
@@ -127,16 +130,20 @@ class __ViewState extends State<_View> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Nombre Usuario",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF11142D),
-                              ),
-                            ),
+                            BlocBuilder<GeneralCubit, GeneralState>(
+                                buildWhen: (p, c) => (p.user != c.user),
+                                builder: (context, state) {
+                                  return Text(
+                                    state.user?.email ?? "N/A",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF11142D),
+                                    ),
+                                  );
+                                }),
                             Text(
                               "Administrador",
                               maxLines: 1,
@@ -151,10 +158,19 @@ class __ViewState extends State<_View> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Icon(
-                        Icons.swap_vert_outlined,
-                        size: 24,
-                        color: Color(0xFF11142D),
+                      InkWell(
+                        onTap: () async {
+                          await AuthLocalProvider().logOut();
+                          if (!context.mounted) return;
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              LoginView.routeName,
+                              (Route<dynamic> route) => false);
+                        },
+                        child: Icon(
+                          Icons.swap_vert_outlined,
+                          size: 24,
+                          color: Color(0xFF11142D),
+                        ),
                       ),
                     ],
                   ),

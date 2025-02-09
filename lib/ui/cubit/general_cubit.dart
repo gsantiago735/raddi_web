@@ -1,9 +1,11 @@
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:raddi_web/models/admin/admin.dart';
 import 'package:raddi_web/models/generic/wrapped.dart';
 import 'package:raddi_web/providers/admin_provider.dart';
 import 'package:raddi_web/models/generic/generic_enums.dart';
+import 'package:raddi_web/providers/auth_local_provider.dart';
 import 'package:raddi_web/models/generic/data_exception_model.dart';
 
 part 'general_state.dart';
@@ -12,6 +14,7 @@ class GeneralCubit extends Cubit<GeneralState> {
   GeneralCubit() : super(const GeneralState());
 
   final _adminProvider = AdminProvider();
+  final _authLocalProvider = AuthLocalProvider();
 
   void clean() => emit(const GeneralState());
 
@@ -50,6 +53,11 @@ class GeneralCubit extends Cubit<GeneralState> {
   // ========================================================================
   // Home
   // ========================================================================
+
+  void getUser() {
+    emit(state.copyWith(
+        user: Wrapped.value(_authLocalProvider.getCurrentUser())));
+  }
 
   Future<void> getIncome() async {
     if (state.incomeStatus == WidgetStatus.loading) return;

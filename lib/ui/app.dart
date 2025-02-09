@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:raddi_web/ui/home/views/home_view.dart';
-// import 'package:raddi_web/ui/authentication/views/login_view.dart';
+import 'package:raddi_web/ui/authentication/views/login_view.dart';
 
 class App extends StatefulWidget {
   const App({super.key});
@@ -17,7 +16,7 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return const HomeView();
+    return const LoginView();
     //switch (status) {
     //  // case AppState.onboarding:
     //  //   return const OnboardingView();
