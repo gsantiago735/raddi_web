@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:raddi_web/utils/validators.dart';
 import 'package:raddi_web/utils/generic_utils.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:raddi_web/models/generic/generic.dart';
 import 'package:raddi_web/widgets/generic/generic.dart';
 import 'package:raddi_web/widgets/input/generic_input.dart';
 import 'package:raddi_web/ui/authentication/cubit/cubit.dart';
 import 'package:raddi_web/widgets/buttons/generic_button.dart';
 import 'package:raddi_web/core/constants/constants_colors.dart';
-import 'package:raddi_web/widgets/dialogs/generic_status_dialog.dart';
+import 'package:raddi_web/ui/authentication/views/login_view.dart';
 
 class ForgotPasswordView extends StatelessWidget {
   const ForgotPasswordView({super.key});
@@ -39,16 +39,11 @@ class ForgotPasswordView extends StatelessWidget {
 
             case WidgetStatus.error:
               Navigator.pop(context);
-              showDialog<void>(
-                context: context,
-                builder: (_) => GenericStatusDialog(
-                    //exception: state.exception,
-                    ),
-              );
               break;
 
             case WidgetStatus.success:
-              Navigator.pop(context);
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  LoginView.routeName, (Route<dynamic> route) => false);
               break;
             default:
               break;
@@ -146,6 +141,15 @@ class _FormState extends State<_Form> {
     super.dispose();
   }
 
+  Future<void> _submit() async {
+    FocusScope.of(context).unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    if (_formKey.currentState!.validate()) {
+      _cubit.forgotPassword(email: _emailController.text.trim());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -184,17 +188,30 @@ class _FormState extends State<_Form> {
             textInputType: TextInputType.emailAddress,
             validator: (value) => Validators.emailValidation(value),
           ),
+          BlocBuilder<AuthCubit, AuthState>(
+            buildWhen: (p, c) => (p.exception != c.exception),
+            builder: (context, state) {
+              if ((state.exception ?? "").isEmpty) return SizedBox.shrink();
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 24),
+                  Text(
+                    state.exception ?? "N/A",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              );
+            },
+          ),
           const SizedBox(height: 32),
           GenericButton(
             text: "Recuperar Contraseña",
-            onTap: () {
-              FocusScope.of(context).unfocus();
-              FocusManager.instance.primaryFocus?.unfocus();
-
-              if (_formKey.currentState!.validate()) {
-                _cubit.forgotPassword();
-              }
-            },
+            onTap: () => _submit(),
           ),
         ],
       ),

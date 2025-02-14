@@ -2,40 +2,43 @@ part of 'auth_cubit.dart';
 
 class AuthState extends Equatable {
   const AuthState({
+    this.exception,
     this.genericStatus = WidgetStatus.initial,
-    //this.exception,
-    //this.stateSelected,
     this.isHiddenPass = true,
+    this.isHiddenCpass = true,
     this.rememberMe = false,
   });
 
   // General
-  //final DataException? exception;
+  final String? exception;
   final WidgetStatus genericStatus;
-  //final LoginResponseModel? responseRegister;
 
   final bool isHiddenPass;
+  final bool isHiddenCpass;
   final bool rememberMe;
 
   @override
   List<Object?> get props => [
+        exception,
         genericStatus,
         isHiddenPass,
+        isHiddenCpass,
         rememberMe,
       ];
 
   AuthState copyWith({
+    Wrapped<String?>? exception,
     WidgetStatus? genericStatus,
     bool? isHiddenPass,
+    bool? isHiddenCpass,
     bool? rememberMe,
-    // Wrapped<TerritorialStateModel?>? stateSelected,
   }) {
     return AuthState(
+      exception: (exception != null) ? exception.value : this.exception,
       genericStatus: genericStatus ?? this.genericStatus,
       isHiddenPass: isHiddenPass ?? this.isHiddenPass,
+      isHiddenCpass: isHiddenCpass ?? this.isHiddenCpass,
       rememberMe: rememberMe ?? this.rememberMe,
-      // stateSelected:
-      //     (stateSelected != null) ? stateSelected.value : this.stateSelected,
     );
   }
 }

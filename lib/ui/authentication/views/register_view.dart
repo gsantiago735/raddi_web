@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:raddi_web/utils/validators.dart';
 import 'package:raddi_web/utils/generic_utils.dart';
+import 'package:raddi_web/ui/home/views/home_view.dart';
 import 'package:raddi_web/widgets/input/generic_input.dart';
+import 'package:raddi_web/models/generic/generic_enums.dart';
 import 'package:raddi_web/ui/authentication/cubit/cubit.dart';
 import 'package:raddi_web/widgets/buttons/generic_button.dart';
 import 'package:raddi_web/core/constants/constants_colors.dart';
+import 'package:raddi_web/widgets/generic/loading_indicator.dart';
 
 class RegisterView extends StatelessWidget {
   const RegisterView({super.key});
@@ -19,66 +22,94 @@ class RegisterView extends StatelessWidget {
     return BlocProvider<AuthCubit>(
       create: (_) => AuthCubit(),
       child: Scaffold(
-          body: SafeArea(
-        child: GenericUtils.isDesktop(context)
-            ? Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      color: ConstantColors.cff2772F0,
-                      padding: EdgeInsets.symmetric(
-                        vertical: size.height * 0.16,
-                        horizontal: size.width * 0.08,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            child: Placeholder(color: Colors.white),
-                          ),
-                          SizedBox(height: size.height * 0.06),
-                          const Text(
-                            "Cambia tu capital con facilidad y las mejores tasas.",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 32,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          SizedBox(height: size.height * 0.03),
-                          const Text(
-                            '''P2B es el lugar más sencillo para comprar y '''
-                            '''vender divisas. Intercambie sus euros, '''
-                            '''dólares y USDT en minutos.''',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: _Form(
-                      padding: EdgeInsets.symmetric(
-                        vertical: size.height * 0.16,
-                        horizontal: size.width * 0.08,
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            : _Form(
-                padding: EdgeInsets.symmetric(
-                  vertical: size.height * 0.06,
-                  horizontal:
-                      GenericUtils.isTablet(context) ? size.width * 0.2 : 32,
+          body: BlocListener<AuthCubit, AuthState>(
+        listenWhen: (p, c) => (p.genericStatus != c.genericStatus),
+        listener: (context, state) {
+          switch (state.genericStatus) {
+            case WidgetStatus.loading:
+              showDialog<void>(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => PopScope(
+                  canPop: false,
+                  child: Center(child: LoadingIndicator()),
                 ),
-              ),
+              );
+              break;
+
+            case WidgetStatus.error:
+              Navigator.pop(context);
+              break;
+
+            case WidgetStatus.success:
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  HomeView.routeName, (Route<dynamic> route) => false);
+              break;
+            default:
+              break;
+          }
+        },
+        child: SafeArea(
+          child: GenericUtils.isDesktop(context)
+              ? Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        color: ConstantColors.cff2772F0,
+                        padding: EdgeInsets.symmetric(
+                          vertical: size.height * 0.16,
+                          horizontal: size.width * 0.08,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                              child: Placeholder(color: Colors.white),
+                            ),
+                            SizedBox(height: size.height * 0.06),
+                            const Text(
+                              "Cambia tu capital con facilidad y las mejores tasas.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 32,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(height: size.height * 0.03),
+                            const Text(
+                              '''P2B es el lugar más sencillo para comprar y '''
+                              '''vender divisas. Intercambie sus euros, '''
+                              '''dólares y USDT en minutos.''',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: _Form(
+                        padding: EdgeInsets.symmetric(
+                          vertical: size.height * 0.16,
+                          horizontal: size.width * 0.08,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : _Form(
+                  padding: EdgeInsets.symmetric(
+                    vertical: size.height * 0.06,
+                    horizontal:
+                        GenericUtils.isTablet(context) ? size.width * 0.2 : 32,
+                  ),
+                ),
+        ),
       )),
     );
   }
@@ -99,6 +130,7 @@ class _FormState extends State<_Form> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _cpasswordController = TextEditingController();
 
   @override
   void initState() {
@@ -111,6 +143,7 @@ class _FormState extends State<_Form> {
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _cpasswordController.dispose();
     super.dispose();
   }
 
@@ -174,10 +207,54 @@ class _FormState extends State<_Form> {
                         ? Icons.visibility_off
                         : Icons.visibility),
                   ),
-                  validator: (value) =>
-                      Validators.loginPasswordValidation(value),
+                  validator: (value) => Validators.registerPasswordValidation(
+                      value,
+                      _passwordController.text,
+                      _cpasswordController.text),
                 );
               }),
+          const SizedBox(height: 24),
+          BlocBuilder<AuthCubit, AuthState>(
+              buildWhen: (p, c) => (p.isHiddenCpass != c.isHiddenCpass),
+              builder: (context, state) {
+                return GenericInput(
+                  obscureText: state.isHiddenCpass,
+                  hintText: "confirmar Contraseña",
+                  prefixIcon: Icons.lock_rounded,
+                  textController: _cpasswordController,
+                  textInputType: TextInputType.visiblePassword,
+                  suffixIcon: IconButton(
+                    onPressed: () => _cubit.setCPasswordVisibility(),
+                    icon: Icon((state.isHiddenCpass)
+                        ? Icons.visibility_off
+                        : Icons.visibility),
+                  ),
+                  validator: (value) => Validators.registerPasswordValidation(
+                      value,
+                      _passwordController.text,
+                      _cpasswordController.text),
+                );
+              }),
+          BlocBuilder<AuthCubit, AuthState>(
+            buildWhen: (p, c) => (p.exception != c.exception),
+            builder: (context, state) {
+              if ((state.exception ?? "").isEmpty) return SizedBox.shrink();
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 24),
+                  Text(
+                    state.exception ?? "N/A",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              );
+            },
+          ),
           const SizedBox(height: 24),
           GenericButton(
             text: "Registrarme",

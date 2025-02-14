@@ -1,9 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:raddi_web/providers/providers.dart';
-import 'package:raddi_web/utils/validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:raddi_web/utils/validators.dart';
 import 'package:raddi_web/utils/generic_utils.dart';
+import 'package:raddi_web/providers/providers.dart';
 import 'package:raddi_web/widgets/generic/generic.dart';
 import 'package:raddi_web/ui/home/views/home_view.dart';
 import 'package:raddi_web/widgets/input/generic_input.dart';
@@ -12,7 +12,6 @@ import 'package:raddi_web/ui/authentication/views/views.dart';
 import 'package:raddi_web/ui/authentication/cubit/cubit.dart';
 import 'package:raddi_web/widgets/buttons/generic_button.dart';
 import 'package:raddi_web/core/constants/constants_colors.dart';
-import 'package:raddi_web/widgets/dialogs/generic_status_dialog.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -43,12 +42,6 @@ class LoginView extends StatelessWidget {
 
             case WidgetStatus.error:
               Navigator.pop(context);
-              showDialog<void>(
-                context: context,
-                builder: (_) => GenericStatusDialog(
-                    //exception: state.exception,
-                    ),
-              );
               break;
 
             case WidgetStatus.success:
@@ -251,10 +244,12 @@ class _FormState extends State<_Form> {
             text: "Iniciar Sesión",
             onTap: () => _submit(),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
           GenericButton(
-            text: "Iniciar con Google",
-            color: Colors.grey,
+            text: "Continuar con Google",
+            color: Colors.white,
+            textColor: Color(0xFF757575),
+            borderColor: Color(0xFF757575),
             onTap: () async {
               await AuthLocalProvider().signInWithGoogle().then((value) {
                 if (value.additionalUserInfo?.profile?["email"] != null) {
@@ -263,6 +258,26 @@ class _FormState extends State<_Form> {
                       HomeView.routeName, (Route<dynamic> route) => false);
                 }
               });
+            },
+          ),
+          BlocBuilder<AuthCubit, AuthState>(
+            buildWhen: (p, c) => (p.exception != c.exception),
+            builder: (context, state) {
+              if ((state.exception ?? "").isEmpty) return SizedBox.shrink();
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 24),
+                  Text(
+                    state.exception ?? "N/A",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              );
             },
           ),
           const SizedBox(height: 24),

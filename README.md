@@ -1,3 +1,3 @@
 # raddi_web
 
-A new Flutter project.
+Automatización Industrial: Raddi Dashboard (2025)

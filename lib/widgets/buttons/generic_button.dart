@@ -4,11 +4,15 @@ import 'package:raddi_web/core/constants/constants_colors.dart';
 class GenericButton extends StatelessWidget {
   final String text;
   final Color color;
+  final Color textColor;
+  final Color? borderColor;
   final VoidCallback? onTap;
 
   const GenericButton({
     super.key,
     required this.text,
+    this.textColor = Colors.white,
+    this.borderColor,
     this.color = ConstantColors.cff2772F0,
     this.onTap,
   });
@@ -27,7 +31,7 @@ class GenericButton extends StatelessWidget {
               side: BorderSide(
                 width: 1,
                 color: (onTap != null)
-                    ? ConstantColors.cff2772F0
+                    ? borderColor ?? Colors.transparent
                     : Colors.transparent,
               ),
             ),
@@ -42,7 +46,7 @@ class GenericButton extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w700,
-            color: (onTap != null) ? Colors.white : Colors.grey,
+            color: (onTap != null) ? textColor : Colors.grey,
           ),
         ),
       ),

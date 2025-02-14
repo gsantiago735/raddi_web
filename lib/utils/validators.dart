@@ -38,27 +38,6 @@ class Validators {
     return null;
   }
 
-  /*static String? phoneValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Por favor ingresa un número de teléfono válido.';
-    }
-
-    final regex = RegExp(r'^\+58\d{9,11}$');
-    if (!regex.hasMatch(value)) {
-      return 'Número de teléfono inválido';
-    }
-
-    return null;
-  }
-
-  static bool isValidUrl(String url) {
-    if (url.isEmpty) return false;
-    RegExp urlRegex = RegExp(
-      r'^(https?:\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:/~+#-]*[\w@?^=%&amp;/~+#-])?',
-    );
-    return urlRegex.hasMatch(url);
-  }
-
   static String? registerPasswordValidation(
       String? value, String password, String cPassword) {
     if (value == null || value.isEmpty) {
@@ -69,5 +48,5 @@ class Validators {
       return "Las contraseñas deben coincidir.";
     }
     return null;
-  }*/
+  }
 }
