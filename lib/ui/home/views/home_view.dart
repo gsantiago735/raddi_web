@@ -210,9 +210,9 @@ class _RenderLeftSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<GeneralCubit, GeneralState>(
-        buildWhen: (p, c) => (p.stadisticsStatus != c.stadisticsStatus),
+        buildWhen: (p, c) => (p.generalStatus != c.generalStatus),
         builder: (context, state) {
-          switch (state.stadisticsStatus) {
+          switch (state.generalStatus) {
             case WidgetStatus.error:
               return Center(
                   child: Text(
@@ -292,9 +292,9 @@ class _RenderCenterSection extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return BlocBuilder<GeneralCubit, GeneralState>(
-      buildWhen: (p, c) => (p.paymentMethodStatus != c.paymentMethodStatus),
+      buildWhen: (p, c) => (p.generalStatus != c.generalStatus),
       builder: (context, state) {
-        switch (state.paymentMethodStatus) {
+        switch (state.generalStatus) {
           case WidgetStatus.error:
             return Center(
                 child: Text(
@@ -350,9 +350,9 @@ class _RenderRightSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return BlocBuilder<GeneralCubit, GeneralState>(
-      buildWhen: (p, c) => (p.incomeStatus != c.incomeStatus),
+      buildWhen: (p, c) => (p.generalStatus != c.generalStatus),
       builder: (context, state) {
-        switch (state.incomeStatus) {
+        switch (state.generalStatus) {
           case WidgetStatus.error:
             return Center(
                 child: Text(

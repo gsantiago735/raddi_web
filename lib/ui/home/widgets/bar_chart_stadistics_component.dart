@@ -1,9 +1,12 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:raddi_web/ui/cubit/cubit.dart';
 
 // Grafico de estaditicas semanales (Usuarios Registrados y Viajes Realizados)
 class BarChartStadisticsComponent extends StatefulWidget {
   const BarChartStadisticsComponent({super.key});
+
   final Color barBackgroundColor = Colors.grey;
   final Color barColor = const Color(0xFFA0D7E7);
   final Color touchedBarColor = const Color(0xFFCFC8FF);
@@ -14,7 +17,15 @@ class BarChartStadisticsComponent extends StatefulWidget {
 
 class BarChartStadisticsComponentState
     extends State<BarChartStadisticsComponent> {
+  late GeneralCubit _cubit;
+
   int touchedIndex = -1;
+
+  @override
+  void initState() {
+    _cubit = context.read<GeneralCubit>();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,26 +76,66 @@ class BarChartStadisticsComponentState
     );
   }
 
-  List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
+  List<BarChartGroupData> showingGroups() {
+    return List.generate(
+      _cubit.state.weeklyStadistics?.length ?? 0,
+      (i) {
         switch (i) {
           case 0:
-            return makeGroupData(0, 5, isTouched: i == touchedIndex);
+            return makeGroupData(
+                i, _cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0,
+                isTouched: i == touchedIndex);
           case 1:
-            return makeGroupData(1, 6.5, isTouched: i == touchedIndex);
+            return makeGroupData(
+                i, _cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0,
+                isTouched: i == touchedIndex);
           case 2:
-            return makeGroupData(2, 5, isTouched: i == touchedIndex);
+            return makeGroupData(
+                i, _cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0,
+                isTouched: i == touchedIndex);
           case 3:
-            return makeGroupData(3, 7.5, isTouched: i == touchedIndex);
+            return makeGroupData(
+                i, _cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0,
+                isTouched: i == touchedIndex);
           case 4:
-            return makeGroupData(4, 9, isTouched: i == touchedIndex);
+            return makeGroupData(
+                i, _cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0,
+                isTouched: i == touchedIndex);
           case 5:
-            return makeGroupData(5, 11.5, isTouched: i == touchedIndex);
+            return makeGroupData(
+                i, _cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0,
+                isTouched: i == touchedIndex);
           case 6:
-            return makeGroupData(6, 6.5, isTouched: i == touchedIndex);
+            return makeGroupData(
+                i, _cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0,
+                isTouched: i == touchedIndex);
           default:
             return throw Error();
         }
-      });
+      },
+    );
+
+    //List.generate(7, (i) {
+    //    switch (i) {
+    //      case 0:
+    //        return makeGroupData(0, 5, isTouched: i == touchedIndex);
+    //      case 1:
+    //        return makeGroupData(1, 6.5, isTouched: i == touchedIndex);
+    //      case 2:
+    //        return makeGroupData(2, 5, isTouched: i == touchedIndex);
+    //      case 3:
+    //        return makeGroupData(3, 7.5, isTouched: i == touchedIndex);
+    //      case 4:
+    //        return makeGroupData(4, 9, isTouched: i == touchedIndex);
+    //      case 5:
+    //        return makeGroupData(5, 11.5, isTouched: i == touchedIndex);
+    //      case 6:
+    //        return makeGroupData(6, 6.5, isTouched: i == touchedIndex);
+    //      default:
+    //        return throw Error();
+    //    }
+    //  });
+  }
 
   BarChartData mainBarData() {
     return BarChartData(
@@ -180,42 +231,34 @@ class BarChartStadisticsComponentState
   }
 
   Widget getTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
-    Widget text;
-    switch (value.toInt()) {
-      case 0:
-        text = const Text('L', style: style);
-        break;
-      case 1:
-        text = const Text('M', style: style);
-        break;
-      case 2:
-        text = const Text('M', style: style);
-        break;
-      case 3:
-        text = const Text('J', style: style);
-        break;
-      case 4:
-        text = const Text('V', style: style);
-        break;
-      case 5:
-        text = const Text('S', style: style);
-        break;
-      case 6:
-        text = const Text('D', style: style);
-        break;
+    late String day;
+
+    switch (_cubit.state.weeklyStadistics?[value.toInt()].nameDay) {
+      case "Saturday":
+        day = "Sa";
+      case "Friday":
+        day = "Vi";
+      case "Thursday":
+        day = "Ju";
+      case "Wednesday":
+        day = "Mi";
+      case "Tuesday":
+        day = "Ma";
+      case "Monday":
+        day = "Lu";
+      case "Sunday":
+        day = "Do";
       default:
-        text = const Text('', style: style);
-        break;
+        day = "N/A";
     }
+
     return SideTitleWidget(
       axisSide: AxisSide.bottom,
-      //meta: meta,
       space: 16,
-      child: text,
+      child: Text(
+        day,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+      ),
     );
   }
 

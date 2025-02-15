@@ -134,9 +134,13 @@ class GeneralCubit extends Cubit<GeneralState> {
     return response.fold((l) {
       emit(state.copyWith(weeklyStatus: WidgetStatus.error, exception: l));
     }, (r) {
+      final newList = r;
+      // Eliminando el primer elemento
+      newList.removeAt(0);
+
       emit(state.copyWith(
           weeklyStatus: WidgetStatus.success,
-          weeklyStadistics: Wrapped.value(r)));
+          weeklyStadistics: Wrapped.value(newList)));
     });
   }
 
@@ -149,9 +153,13 @@ class GeneralCubit extends Cubit<GeneralState> {
     return response.fold((l) {
       emit(state.copyWith(tripsOfWeekStatus: WidgetStatus.error, exception: l));
     }, (r) {
+      final newList = r;
+      // Eliminando el ultimo elemento
+      newList.removeLast();
+
       emit(state.copyWith(
           tripsOfWeekStatus: WidgetStatus.success,
-          tripsOfWeek: Wrapped.value(r)));
+          tripsOfWeek: Wrapped.value(newList.reversed.toList())));
     });
   }
 }
