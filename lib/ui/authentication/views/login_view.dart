@@ -215,7 +215,7 @@ class _FormState extends State<_Form> {
             borderColor: Color(0xFF757575),
             onTap: () async {
               await AuthLocalProvider().signInWithGoogle().then((value) {
-                if (value.additionalUserInfo?.profile?["email"] != null) {
+                if (value?.additionalUserInfo?.profile?["email"] != null) {
                   if (!context.mounted) return;
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       HomeView.routeName, (Route<dynamic> route) => false);

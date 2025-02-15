@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:raddi_web/models/admin/admin.dart';
 import 'package:raddi_web/models/generic/wrapped.dart';
 import 'package:raddi_web/providers/admin_provider.dart';
@@ -59,7 +59,28 @@ class GeneralCubit extends Cubit<GeneralState> {
         user: Wrapped.value(_authLocalProvider.getCurrentUser())));
   }
 
-  Future<void> getIncome() async {
+  Future<void> getHomeInformation() async {
+    if (state.generalStatus == WidgetStatus.loading) return;
+    emit(state.copyWith(generalStatus: WidgetStatus.loading));
+
+    await _getIncome();
+    await _getStadistic();
+    await _getPaymentStadistics();
+    await _getWeeklyStadistics();
+    await _getTripsOfWeek();
+
+    if (state.incomeStatus == WidgetStatus.success &&
+        state.paymentMethodStatus == WidgetStatus.success &&
+        state.stadisticsStatus == WidgetStatus.success &&
+        state.weeklyStatus == WidgetStatus.success &&
+        state.tripsOfWeekStatus == WidgetStatus.success) {
+      emit(state.copyWith(generalStatus: WidgetStatus.success));
+    } else {
+      emit(state.copyWith(generalStatus: WidgetStatus.error));
+    }
+  }
+
+  Future<void> _getIncome() async {
     if (state.incomeStatus == WidgetStatus.loading) return;
     emit(state.copyWith(incomeStatus: WidgetStatus.loading));
 
@@ -73,7 +94,7 @@ class GeneralCubit extends Cubit<GeneralState> {
     });
   }
 
-  Future<void> getPaymentStadistics() async {
+  Future<void> _getPaymentStadistics() async {
     if (state.paymentMethodStatus == WidgetStatus.loading) return;
     emit(state.copyWith(paymentMethodStatus: WidgetStatus.loading));
 
@@ -89,7 +110,7 @@ class GeneralCubit extends Cubit<GeneralState> {
     });
   }
 
-  Future<void> getStadistic() async {
+  Future<void> _getStadistic() async {
     if (state.stadisticsStatus == WidgetStatus.loading) return;
     emit(state.copyWith(stadisticsStatus: WidgetStatus.loading));
 
@@ -104,7 +125,7 @@ class GeneralCubit extends Cubit<GeneralState> {
     });
   }
 
-  Future<void> getWeeklyStadistics() async {
+  Future<void> _getWeeklyStadistics() async {
     if (state.weeklyStatus == WidgetStatus.loading) return;
     emit(state.copyWith(weeklyStatus: WidgetStatus.loading));
 
@@ -119,7 +140,7 @@ class GeneralCubit extends Cubit<GeneralState> {
     });
   }
 
-  Future<void> getTripsOfWeek() async {
+  Future<void> _getTripsOfWeek() async {
     if (state.tripsOfWeekStatus == WidgetStatus.loading) return;
     emit(state.copyWith(tripsOfWeekStatus: WidgetStatus.loading));
 

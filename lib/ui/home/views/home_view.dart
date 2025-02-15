@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:raddi_web/providers/auth_local_provider.dart';
-import 'package:raddi_web/ui/authentication/views/login_view.dart';
-import 'package:raddi_web/ui/cubit/cubit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:raddi_web/ui/cubit/cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:raddi_web/ui/home/widgets/widget.dart';
 import 'package:raddi_web/widgets/generic/generic.dart';
 import 'package:raddi_web/models/generic/generic_enums.dart';
+import 'package:raddi_web/providers/auth_local_provider.dart';
 import 'package:raddi_web/core/constants/constants_icons.dart';
+import 'package:raddi_web/core/constants/constants_images.dart';
+import 'package:raddi_web/ui/authentication/views/login_view.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -39,11 +40,7 @@ class __ViewState extends State<_View> {
     _cubit = context.read<GeneralCubit>();
 
     _cubit.getUser();
-    _cubit.getIncome();
-    _cubit.getStadistic();
-    _cubit.getPaymentStadistics();
-    _cubit.getWeeklyStadistics();
-    _cubit.getTripsOfWeek();
+    _cubit.getHomeInformation();
 
     super.initState();
   }
@@ -83,25 +80,43 @@ class __ViewState extends State<_View> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Hola, Nombre!",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Color(0xFF11142D),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      "Bienvenido 👋",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 48,
-                        color: Color(0xFF11142D),
-                        fontWeight: FontWeight.w600,
-                      ),
+                    BlocBuilder<GeneralCubit, GeneralState>(
+                        buildWhen: (p, c) => (p.user != c.user),
+                        builder: (context, state) {
+                          return Text(
+                            (state.user?.displayName ?? "").isNotEmpty
+                                ? "¡Hola, ${state.user?.displayName}!"
+                                : "¡Hola!",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: Color(0xFF11142D),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          );
+                        }),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            "Bienvenido",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 48,
+                              color: Color(0xFF11142D),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Image.asset(
+                          ConstantImages.wavingHand,
+                          scale: 5,
+                        )
+                      ],
                     ),
                   ],
                 ),
@@ -120,11 +135,19 @@ class __ViewState extends State<_View> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.person_rounded,
-                        size: 50,
-                        color: Color(0xFF11142D),
-                      ),
+                      BlocBuilder<GeneralCubit, GeneralState>(
+                          buildWhen: (p, c) => (p.user != c.user),
+                          builder: (context, state) {
+                            if ((state.user?.photoURL ?? "").isEmpty) {
+                              return Icon(Icons.person_rounded,
+                                  size: 50, color: Color(0xFF11142D));
+                            }
+                            return GenericNetworkImage(
+                              path: state.user?.photoURL,
+                              size: 50,
+                              border: 100,
+                            );
+                          }),
                       const SizedBox(width: 16),
                       Flexible(
                         child: Column(
@@ -159,20 +182,17 @@ class __ViewState extends State<_View> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      InkWell(
-                        onTap: () async {
+                      IconButton(
+                        color: Colors.red,
+                        icon: Icon(Icons.logout_rounded),
+                        onPressed: () async {
                           await AuthLocalProvider().logOut();
                           if (!context.mounted) return;
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               LoginView.routeName,
                               (Route<dynamic> route) => false);
                         },
-                        child: Icon(
-                          Icons.swap_vert_outlined,
-                          size: 24,
-                          color: Color(0xFF11142D),
-                        ),
-                      ),
+                      )
                     ],
                   ),
                 ),
@@ -312,7 +332,8 @@ class _RenderCenterSection extends StatelessWidget {
                       //  ),
                       //),
                     ],
-                  )
+                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
             );
@@ -352,6 +373,7 @@ class _RenderRightSection extends StatelessWidget {
                   CustomLayout(
                     child: BarChartTripsComponent(),
                   ),
+                  const SizedBox(height: 20),
                 ],
               ),
             );

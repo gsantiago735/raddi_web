@@ -1,3 +1,3 @@
 class ConstantImages {
-  //static const String imgRacket = "assets/images/image_racket.png";
+  static const String wavingHand = "assets/images/waving-hand.png";
 }
