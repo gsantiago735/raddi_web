@@ -3,4 +3,5 @@ class EndPointConstant {
   static const String stadistics = "api/admin/stadistics/";
   static const String paymentMethods = "api/admin/payment-methods-used/";
   static const String weekly = "api/admin/stadistic/for-day/";
+  static const String tripsOfWeek = "api/admin/stadistic/trips-for-day/";
 }

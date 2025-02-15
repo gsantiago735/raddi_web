@@ -118,4 +118,19 @@ class GeneralCubit extends Cubit<GeneralState> {
           weeklyStadistics: Wrapped.value(r)));
     });
   }
+
+  Future<void> getTripsOfWeek() async {
+    if (state.tripsOfWeekStatus == WidgetStatus.loading) return;
+    emit(state.copyWith(tripsOfWeekStatus: WidgetStatus.loading));
+
+    final response = await _adminProvider.getTripsOfWeek();
+
+    return response.fold((l) {
+      emit(state.copyWith(tripsOfWeekStatus: WidgetStatus.error, exception: l));
+    }, (r) {
+      emit(state.copyWith(
+          tripsOfWeekStatus: WidgetStatus.success,
+          tripsOfWeek: Wrapped.value(r)));
+    });
+  }
 }

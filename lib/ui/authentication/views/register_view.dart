@@ -9,6 +9,7 @@ import 'package:raddi_web/ui/authentication/cubit/cubit.dart';
 import 'package:raddi_web/widgets/buttons/generic_button.dart';
 import 'package:raddi_web/core/constants/constants_colors.dart';
 import 'package:raddi_web/widgets/generic/loading_indicator.dart';
+import 'package:raddi_web/ui/authentication/widgets/left_side_component.dart';
 
 class RegisterView extends StatelessWidget {
   const RegisterView({super.key});
@@ -53,45 +54,7 @@ class RegisterView extends StatelessWidget {
           child: GenericUtils.isDesktop(context)
               ? Row(
                   children: [
-                    Expanded(
-                      child: Container(
-                        color: ConstantColors.cff2772F0,
-                        padding: EdgeInsets.symmetric(
-                          vertical: size.height * 0.16,
-                          horizontal: size.width * 0.08,
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Expanded(
-                              child: Placeholder(color: Colors.white),
-                            ),
-                            SizedBox(height: size.height * 0.06),
-                            const Text(
-                              "Cambia tu capital con facilidad y las mejores tasas.",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 32,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            SizedBox(height: size.height * 0.03),
-                            const Text(
-                              '''P2B es el lugar más sencillo para comprar y '''
-                              '''vender divisas. Intercambie sus euros, '''
-                              '''dólares y USDT en minutos.''',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    Expanded(child: LeftSideComponent()),
                     Expanded(
                       child: _Form(
                         padding: EdgeInsets.symmetric(
@@ -219,7 +182,7 @@ class _FormState extends State<_Form> {
               builder: (context, state) {
                 return GenericInput(
                   obscureText: state.isHiddenCpass,
-                  hintText: "confirmar Contraseña",
+                  hintText: "Confirmar Contraseña",
                   prefixIcon: Icons.lock_rounded,
                   textController: _cpasswordController,
                   textInputType: TextInputType.visiblePassword,

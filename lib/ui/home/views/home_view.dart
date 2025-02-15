@@ -43,6 +43,7 @@ class __ViewState extends State<_View> {
     _cubit.getStadistic();
     _cubit.getPaymentStadistics();
     _cubit.getWeeklyStadistics();
+    _cubit.getTripsOfWeek();
 
     super.initState();
   }
