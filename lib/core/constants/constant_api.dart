@@ -10,5 +10,5 @@ class ConstantApi {
   // Change url with the current environment if necessary
   // =========================================================================
 
-  static String url = urlBaseDev;
+  static String url = urlBaseProd;
 }
