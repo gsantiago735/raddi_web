@@ -138,9 +138,21 @@ class GeneralCubit extends Cubit<GeneralState> {
       // Eliminando el primer elemento
       newList.removeAt(0);
 
+      // Calculando los totales
+      int totalRegisters = 0;
+      int totalTrips = 0;
+
+      for (var i = 0; i < newList.length; i++) {
+        totalRegisters = totalRegisters + (newList[i].users ?? 0);
+        totalTrips = totalTrips + (newList[i].trips ?? 0);
+      }
+
       emit(state.copyWith(
-          weeklyStatus: WidgetStatus.success,
-          weeklyStadistics: Wrapped.value(newList)));
+        weeklyStatus: WidgetStatus.success,
+        weeklyStadistics: Wrapped.value(newList),
+        totalWeekTrips: Wrapped.value(totalTrips),
+        totalWeekUsers: Wrapped.value(totalRegisters),
+      ));
     });
   }
 

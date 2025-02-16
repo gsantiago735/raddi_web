@@ -30,6 +30,7 @@ class PaymentComponent extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return _Option(
                     title: state.payment?[index].typePayment?.getText ?? "N/A",
+                    amount: state.payment?[index].totalUsed.toString() ?? "N/A",
                     value: ((state.payment?[index].percentagUsed ?? 0))
                         .toStringAsFixed(2),
                   );
@@ -44,9 +45,11 @@ class PaymentComponent extends StatelessWidget {
 }
 
 class _Option extends StatelessWidget {
-  const _Option({required this.title, required this.value});
+  const _Option(
+      {required this.title, required this.value, required this.amount});
 
   final String title;
+  final String amount;
   final String value;
 
   @override
@@ -79,7 +82,7 @@ class _Option extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        "$value% de las veces.",
+        "($amount) $value% de las veces.",
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(

@@ -17,6 +17,8 @@ class GeneralState extends Equatable {
     this.tripsOfWeekStatus = WidgetStatus.initial,
     this.tripsOfWeek,
     this.generalStatus = WidgetStatus.initial,
+    this.totalWeekUsers,
+    this.totalWeekTrips,
   });
 
   // General
@@ -33,6 +35,9 @@ class GeneralState extends Equatable {
 
   final bool isGross;
   final int period;
+
+  final int? totalWeekUsers;
+  final int? totalWeekTrips;
 
   final IncomeResponseModel? income;
   final StadisticsResponseModel? stadistics;
@@ -57,6 +62,8 @@ class GeneralState extends Equatable {
         tripsOfWeekStatus,
         tripsOfWeek,
         generalStatus,
+        totalWeekUsers,
+        totalWeekTrips,
       ];
 
   GeneralState copyWith({
@@ -75,6 +82,8 @@ class GeneralState extends Equatable {
     WidgetStatus? tripsOfWeekStatus,
     Wrapped<List<TripsOfWeekResponseModel>?>? tripsOfWeek,
     WidgetStatus? generalStatus,
+    Wrapped<int?>? totalWeekUsers,
+    Wrapped<int?>? totalWeekTrips,
   }) {
     return GeneralState(
       exception: exception ?? this.exception,
@@ -94,6 +103,10 @@ class GeneralState extends Equatable {
       tripsOfWeekStatus: tripsOfWeekStatus ?? this.tripsOfWeekStatus,
       tripsOfWeek: tripsOfWeek != null ? tripsOfWeek.value : this.tripsOfWeek,
       generalStatus: generalStatus ?? this.generalStatus,
+      totalWeekUsers:
+          totalWeekUsers != null ? totalWeekUsers.value : this.totalWeekUsers,
+      totalWeekTrips:
+          totalWeekTrips != null ? totalWeekTrips.value : this.totalWeekTrips,
     );
   }
 }

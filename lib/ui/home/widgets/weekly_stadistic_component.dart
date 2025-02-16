@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:raddi_web/ui/cubit/cubit.dart';
 import 'package:raddi_web/ui/home/widgets/bar_chart_stadistics_component.dart';
 
 class WeeklyStadisticComponent extends StatelessWidget {
@@ -19,17 +21,27 @@ class WeeklyStadisticComponent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 30),
-        _Component(
-          title: "Usuarios registrados",
-          value: "40",
-          percentage: "21.95%",
-        ),
+        BlocBuilder<GeneralCubit, GeneralState>(
+            buildWhen: (p, c) => (p.totalWeekUsers != c.totalWeekUsers),
+            builder: (context, state) {
+              return _Component(
+                title: "Usuarios registrados",
+                value: state.totalWeekUsers.toString(),
+                //percentage: "21.95%",
+                isUsers: true,
+              );
+            }),
         Divider(height: 60),
-        _Component(
-          title: "Viajes Realizados",
-          value: "246",
-          percentage: "11.45%",
-        ),
+        BlocBuilder<GeneralCubit, GeneralState>(
+            buildWhen: (p, c) => (p.totalWeekTrips != c.totalWeekTrips),
+            builder: (context, state) {
+              return _Component(
+                title: "Viajes Realizados",
+                value: state.totalWeekTrips.toString(),
+                //percentage: "11.45%",
+                isUsers: false,
+              );
+            }),
       ],
     );
   }
@@ -37,11 +49,15 @@ class WeeklyStadisticComponent extends StatelessWidget {
 
 class _Component extends StatelessWidget {
   const _Component(
-      {required this.title, required this.value, required this.percentage});
+      {required this.title,
+      required this.value,
+      //required this.percentage,
+      required this.isUsers});
 
   final String title;
   final String value;
-  final String percentage;
+  //final String percentage;
+  final bool isUsers;
 
   @override
   Widget build(BuildContext context) {
@@ -70,23 +86,26 @@ class _Component extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              Text(
-                percentage,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF7FBA7A),
-                ),
-              ),
+              //Text(
+              //  percentage,
+              //  maxLines: 1,
+              //  overflow: TextOverflow.ellipsis,
+              //  style: TextStyle(
+              //    fontSize: 16,
+              //    fontWeight: FontWeight.w600,
+              //    color: Color(0xFF7FBA7A),
+              //  ),
+              //),
             ],
           ),
         ),
         const SizedBox(width: 10),
         Expanded(
           flex: 3,
-          child: SizedBox(height: 200, child: BarChartStadisticsComponent()),
+          child: SizedBox(
+            height: 200,
+            child: BarChartStadisticsComponent(isUsers: isUsers),
+          ),
         )
       ],
     );

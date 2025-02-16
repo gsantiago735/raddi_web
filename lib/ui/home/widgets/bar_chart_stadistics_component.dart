@@ -5,7 +5,9 @@ import 'package:raddi_web/ui/cubit/cubit.dart';
 
 // Grafico de estaditicas semanales (Usuarios Registrados y Viajes Realizados)
 class BarChartStadisticsComponent extends StatefulWidget {
-  const BarChartStadisticsComponent({super.key});
+  const BarChartStadisticsComponent({super.key, required this.isUsers});
+
+  final bool isUsers;
 
   final Color barBackgroundColor = Colors.grey;
   final Color barColor = const Color(0xFFA0D7E7);
@@ -83,31 +85,59 @@ class BarChartStadisticsComponentState
         switch (i) {
           case 0:
             return makeGroupData(
-                i, _cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0,
+                i,
+                (widget.isUsers == true)
+                    ? (_cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0)
+                    : (_cubit.state.weeklyStadistics?[i].trips?.toDouble() ??
+                        0),
                 isTouched: i == touchedIndex);
           case 1:
             return makeGroupData(
-                i, _cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0,
+                i,
+                (widget.isUsers == true)
+                    ? (_cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0)
+                    : (_cubit.state.weeklyStadistics?[i].trips?.toDouble() ??
+                        0),
                 isTouched: i == touchedIndex);
           case 2:
             return makeGroupData(
-                i, _cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0,
+                i,
+                (widget.isUsers == true)
+                    ? (_cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0)
+                    : (_cubit.state.weeklyStadistics?[i].trips?.toDouble() ??
+                        0),
                 isTouched: i == touchedIndex);
           case 3:
             return makeGroupData(
-                i, _cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0,
+                i,
+                (widget.isUsers == true)
+                    ? (_cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0)
+                    : (_cubit.state.weeklyStadistics?[i].trips?.toDouble() ??
+                        0),
                 isTouched: i == touchedIndex);
           case 4:
             return makeGroupData(
-                i, _cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0,
+                i,
+                (widget.isUsers == true)
+                    ? (_cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0)
+                    : (_cubit.state.weeklyStadistics?[i].trips?.toDouble() ??
+                        0),
                 isTouched: i == touchedIndex);
           case 5:
             return makeGroupData(
-                i, _cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0,
+                i,
+                (widget.isUsers == true)
+                    ? (_cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0)
+                    : (_cubit.state.weeklyStadistics?[i].trips?.toDouble() ??
+                        0),
                 isTouched: i == touchedIndex);
           case 6:
             return makeGroupData(
-                i, _cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0,
+                i,
+                (widget.isUsers == true)
+                    ? (_cubit.state.weeklyStadistics?[i].users?.toDouble() ?? 0)
+                    : (_cubit.state.weeklyStadistics?[i].trips?.toDouble() ??
+                        0),
                 isTouched: i == touchedIndex);
           default:
             return throw Error();
@@ -145,34 +175,28 @@ class BarChartStadisticsComponentState
           tooltipHorizontalAlignment: FLHorizontalAlignment.right,
           tooltipMargin: -10,
           getTooltipItem: (group, groupIndex, rod, rodIndex) {
-            String weekDay;
-            switch (group.x) {
-              case 0:
-                weekDay = 'Lunes';
-                break;
-              case 1:
-                weekDay = 'Martes';
-                break;
-              case 2:
-                weekDay = 'Miércoles';
-                break;
-              case 3:
-                weekDay = 'Jueves';
-                break;
-              case 4:
-                weekDay = 'Viernes';
-                break;
-              case 5:
-                weekDay = 'Sábado';
-                break;
-              case 6:
-                weekDay = 'Domingo';
-                break;
+            late String day;
+
+            switch (_cubit.state.weeklyStadistics?[group.x].nameDay) {
+              case "Saturday":
+                day = "Sábado";
+              case "Friday":
+                day = "Viernes";
+              case "Thursday":
+                day = "Jueves";
+              case "Wednesday":
+                day = "Miercoles";
+              case "Tuesday":
+                day = "Martes";
+              case "Monday":
+                day = "Lunes";
+              case "Sunday":
+                day = "Domingo";
               default:
-                throw Error();
+                day = "N/A";
             }
             return BarTooltipItem(
-              '$weekDay\n',
+              '$day\n',
               const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
